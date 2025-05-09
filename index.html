@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Glitch Turquesa con Blur</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #ffffff;
+    }
+    canvas {
+      display: block;
+    }
+    /* Animación de Fade-in */
+    .fade-in {
+      opacity: 0;
+      animation: fadeInAnimation 1.5s ease-in-out forwards;
+    }
+
+    @keyframes fadeInAnimation {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    /* Cabecera con logo y botones */
+    .header {
+      position: relative;
+      height: 80px;
+      background: rgb(255, 255, 255);
+      border-bottom: 1px solid rgba(255, 255, 255, 0);
+      z-index: 10; /* Por encima del video */
+      animation-delay: 0.5s;
+    }
+    /* Botones de navegación centrados */
+    .nav-buttons {
+      position: absolute;
+      left: 50%;
+      top: 25%;
+      transform: translate(-50%, -50%);
+      font-size: 20px;
+    }
+    .nav-buttons a {
+      display: inline-block;
+      margin: 0;
+      padding: 10px 20px;
+      background-color: transparent;
+      border: 1px solid rgba(0, 0, 0, 0);
+      color: rgb(113, 0, 0);
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+      font-family: "Avenir", sans-serif;
+    }
+    .nav-buttons a:hover {
+      /*background-color: rgba(0, 0, 0, 0.425);*/
+      text-decoration: line-through;
+    }
+    /* Botón activo: se subraya */
+    .nav-buttons a.active {
+      text-decoration: line-through;
+    }
+    /* Área de contenido */
+    .content {
+      position: relative;
+      right: 270px;
+      margin: 40px auto 40px auto;
+      max-width: 800px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.545);
+      border-radius: 10px;
+      z-index: 10; /* Por encima del video */
+    }
+
+    /* Animación para invertir colores */
+    @keyframes invertColors {
+      0% {
+        filter: invert(0); /* Colores normales al inicio */
+      }
+      100% {
+        filter: invert(1); /* Colores invertidos al final */
+      }
+    }
+
+    /* Modal pequeño con texto estático en posiciones aleatorias */
+    .small-modal {
+      position: absolute;
+      font-size: 15px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: rgb(255, 255, 255);
+      padding: 5px 10px;
+      border-radius: 5px;
+      z-index: 100;
+      cursor: pointer;
+      transition: top 10s, left 10s; /* Añadimos animación */
+      animation: fadeInAnimation 1.5s ease-in-out forwards;
+    }
+
+    /* Modal grande con imagen centrada */
+    .large-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40%; /* Modal más grande */
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.927);
+      color: rgb(255, 255, 255);
+      border-radius: 10px;
+      z-index: 200;
+    }
+
+    /* Fondo opaco para el overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro con opacidad */
+      z-index: 150; /* Debajo del modal grande pero por encima del contenido */
+      display: none;
+    }
+
+    /* Modal con texto que aparece después del click */
+    .text-modal {
+      display: none; /* Inicialmente oculto */
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, 0.831);
+      color: rgb(255, 255, 255);
+      padding: 20px;
+      border-radius: 10px;
+      z-index: 300;
+      font-size: 16px;
+    }
+
+    /* Logo en el centro */
+    .center-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px;
+      height: 300px;
+      background-image: url('CAEA.png'); /* Aquí puedes poner la ruta de tu logo */
+      background-size: 80%;
+      background-position: center;
+      cursor: pointer;
+      animation: fadeInAnimation 3s ease-in-out forwards;
+      z-index: 200; /* Asegurarse de que esté sobre el contenido */
+      /*filter: invert(0); /* Empieza sin invertir */
+      /*animation: invertColorsLogo 10s forwards; /* Animación para invertir los colores del logo */
+    }
+
+    /* Animación para invertir colores del logo */
+    @keyframes invertColorsLogo {
+      0% {
+        filter: invert(0); /* Colores normales al inicio */
+      }
+      100% {
+        filter: invert(1); /* Colores invertidos al final */
+      }
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #ffffff; /* turquesa */
+    }
+    #panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.855);
+  transform: translate(-50%, -50%);
+  border-radius: 12px;
+  pointer-events: none; /* Permite que el mouse pase al canvas */
+}
+#panel2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60%;
+  height: 50%;
+  background-color: rgba(255, 255, 255, 0.808);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  border-color: black;
+  border-radius: 25px;
+  transform: translate(-50%, -50%);
+  border-radius: 12px;
+  pointer-events: none; /* Permite que el mouse pase al canvas */
+}
+#mute-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+  </style>
+</head>
+<body>
+
+  <canvas id="glitchCanvas"></canvas>
+  <div id="panel"></div>
+ <audio id="bg-audio" loop autoplay>
+  <source src="caea-sound.wav" type="audio/mpeg" />
+  Tu navegador no soporta audio HTML5.
+</audio>
+
+<button id="mute-btn">🔊</button>
+  <!--  <div class="header fade-in"> -->
+    <div class="nav-buttons"> 
+        <a href="index.html"class="active">\home</a>
+        <a href="/work/">/work</a>
+        <a href="/contact/">\contact</a> 
+        <a href="media.html">\media</a>
+    </div>
+  </div>
+
+  <!-- Contenedor de los textos estáticos
+  <div id="smallModalContainer"></div>
+
+  <!-- Logo central que abre el modal -->
+  <div class="center-logo" id="centerLogo"
+  onclick="showLargeModal('Suspira es un espectro de obras que se estructura en cuatro ejes principales: 1. Música de Estudio. 2. Instalaciones multimedia y arte sonoro. 3. Actuaciones en vivo y conciertos. 4. Archivo y Documentación. Cada eje puede constituir en una o mas obras independiente que interactua con los demas, creando una red interconectada sin temporalidad definida. La obra no tiene un inicio ni un final, sino que se suspende en un continuo. En este contexto, cada eje representa un tiempo distinto: el archivo y la documentación simbolizan el pasado, las actuaciones en vivo representa el presente, las instalaciones apuntan hacia el futuro y la música de estudio transitan entre todo el espectro del tiempo.')"></div>
+  <!-- Fondo opaco (overlay) -->
+  <div id="overlay" class="overlay"></div>
+
+  <!-- Modal grande con texto (oculto por defecto) -->
+  <div class="large-modal" id="largeModal" style="display: none;">
+    <p id="largeModalText"></p>
+  </div>
+  <script>
+     // ELEMENTOS PRINCIPALES
+     const audio = document.getElementById('bg-audio');
+    const muteBtn = document.getElementById('mute-btn');
+
+    // CONFIGURACIÓN DE WEBAUDIO
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const audioCtx = new AudioContext();
+    const sourceNode = audioCtx.createMediaElementSource(audio);
+    const lpFilter = audioCtx.createBiquadFilter();
+    lpFilter.type = 'lowpass';
+    // Rango de frecuencia 500 Hz (cerrado) a 20000 Hz (abierto)
+    const MIN_FREQ = 50;
+    const MAX_FREQ = 10000;
+    sourceNode.connect(lpFilter);
+    lpFilter.connect(audioCtx.destination);
+    
+    // REPRODUCCIÓN EN LOOP CONTINUO
+    audio.addEventListener('ended', () => {
+      audio.currentTime = 0;
+      audio.play();
+    });
+
+    // REANUDAR AUDIO EN PRIMER CLICK
+    document.body.addEventListener('click', () => {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      if (audio.paused) audio.play();
+    }, { once: true });
+
+    // BOTÓN DE MUTE
+    muteBtn.addEventListener('click', () => {
+      audio.muted = !audio.muted;
+      muteBtn.textContent = audio.muted ? '🔇' : '🔊';
+    });
+
+    // CONTROL DE FILTRO CON EL CURSOR EN 85% CÉNTRICO
+    const CENTER_RATIO = 0.5;
+    window.addEventListener('mousemove', (e) => {
+      const w = window.innerWidth;
+      const centerWidth = w * CENTER_RATIO;
+      const offset = (w - centerWidth) / 2;
+      const x = e.clientX;
+      let pos;
+      if (x < offset) pos = 0;
+      else if (x > offset + centerWidth) pos = 1;
+      else pos = (x - offset) / centerWidth;
+      const freq = MIN_FREQ + (MAX_FREQ - MIN_FREQ) * pos;
+      lpFilter.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    });
+
+    const canvas = document.getElementById('glitchCanvas');
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+
+    let lastMouseX = w / 2;
+    let lastMouseY = h / 2;
+    let mouseSpeed = 0;
+    let active = false;
+    document.body.addEventListener('click', () => {
+  if (audio.paused) audio.play();
+}, { once: true });
+
+
+    // Medir velocidad del cursor
+    window.addEventListener('mousemove', (e) => {
+      const dx = e.clientX - lastMouseX;
+      const dy = e.clientY - lastMouseY;
+      mouseSpeed = Math.sqrt(dx * dx + dy * dy);
+      lastMouseX = e.clientX;
+      lastMouseY = e.clientY;
+      active = true;
+    });
+
+    function randomTurquoiseColor() {
+      const hue = 0 + Math.random() * 40;
+      const sat = 0 + Math.random() * 20;
+      const light = 0 + Math.random() * 30;
+      return `hsl(${hue}, ${sat}%, ${light}%)`;
+    }
+
+    function drawGlitchBrush(intensity = 1) {
+      const strokes = Math.floor(3000 * intensity);
+      for (let i = 0; i < strokes; i++) {
+        let x = Math.random() * w;
+        let y = Math.random() * h;
+        let length = 10 + Math.random() * 60;
+        let angle = Math.random() * Math.PI * 2;
+        let thickness = Math.random() * 3 + 0.5;
+
+        ctx.strokeStyle = randomTurquoiseColor();
+        ctx.lineWidth = thickness;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(angle) * length, y + Math.sin(angle) * length);
+        ctx.stroke();
+      }
+    }
+
+    function addNoise(amount = 50) {
+      const imgData = ctx.getImageData(0, 0, w, h);
+      for (let i = 0; i < imgData.data.length; i += 4) {
+        imgData.data[i] += Math.random() * amount - amount / 2;
+        imgData.data[i + 1] += Math.random() * amount - amount / 2;
+        imgData.data[i + 2] += Math.random() * amount - amount / 2;
+      }
+      ctx.putImageData(imgData, 0, 0);
+    }
+
+    function glitchBands(intensity = 1) {
+      const count = Math.floor(30 * intensity);
+      for (let i = 0; i < count; i++) {
+        let bandHeight = Math.random() * 20 + 5;
+        let y = Math.random() * h;
+        let dx = (Math.random() - 0.5) * 120;
+        let imgData = ctx.getImageData(0, y, w, bandHeight);
+        ctx.putImageData(imgData, dx, y);
+      }
+    }
+
+    function render() {
+      requestAnimationFrame(render);
+
+      if (!active) return;
+
+      const velocityFactor = Math.min(2, mouseSpeed / 20 + 0.1);
+
+      // Limpia fondo antes de aplicar efectos
+      ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+      ctx.fillRect(0, 0, w, h);
+
+      // BLUR aplicado al contexto antes de dibujar
+      ctx.filter = `blur(${velocityFactor * 2}px)`;
+      drawGlitchBrush(velocityFactor);
+      ctx.filter = "none"; // restauramos
+
+      addNoise(velocityFactor * 50);
+      glitchBands(velocityFactor);
+
+      // Decaimiento gradual del movimiento
+      mouseSpeed *= 0;
+      if (mouseSpeed < 0.2) active = false;
+    }
+
+    render();
+    
+    window.addEventListener('resize', () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    });
+
+     // Función para mostrar el modal grande con texto
+     function showLargeModal(text) {
+      const largeModal = document.getElementById('largeModal');
+      const largeModalText = document.getElementById('largeModalText');
+      const overlay = document.getElementById('overlay');
+
+      largeModalText.innerText = text;
+      largeModal.style.display = 'block';
+      overlay.style.display = 'block'; // Mostrar el fondo opaco
+    }
+
+    // Cerrar el modal grande cuando se haga clic fuera de él
+    window.onclick = function(event) {
+      var modal = document.getElementById('largeModal');
+      var overlay = document.getElementById('overlay');
+      if (event.target == modal || event.target == overlay) {
+        modal.style.display = "none";
+        overlay.style.display = "none"; // Ocultar el fondo opaco
+      }
+    }
+
+    // Generar 7 textos con posiciones aleatorias y estáticos
+    const texts = [
+      { smallText: "((hoy))", largeText: "Texto grande 1: Detalles sobre el texto 1." },
+      { smallText: "((ayer))", largeText: "Texto grande 2: Detalles sobre el texto 2." },
+      { smallText: "((anteayer))", largeText: "Texto grande 3: Detalles sobre el texto 3." },
+      { smallText: "((mañana))", largeText: "Texto grande 4: Detalles sobre el texto 4." },
+      { smallText: "((siguiente))", largeText: "Texto grande 5: Detalles sobre el texto 5." },
+      { smallText: "intro", largeText: "Texto grande 6: Detalles sobre el texto 6." },
+      { smallText: "historia", largeText: "Texto grande 7: Detalles sobre el texto 7." }
+    ];
+
+    const smallModalContainer = document.getElementById('smallModalContainer');
+
+    // Crear los modales pequeños y asignarles posiciones aleatorias
+    texts.forEach((textObj, index) => {
+      const smallModal = document.createElement('div');
+      smallModal.classList.add('small-modal');
+      smallModal.innerText = textObj.smallText;
+
+      // Asignar una posición aleatoria inicial a cada texto
+      const topPosition = Math.random() * 80 + '%';
+      const leftPosition = Math.random() * 80 + '%';
+      smallModal.style.top = topPosition;
+      smallModal.style.left = leftPosition;
+
+      // Evento de clic para mostrar el modal grande con texto
+      smallModal.addEventListener('click', function() {
+        showLargeModal(textObj.largeText);
+      });
+
+      smallModalContainer.appendChild(smallModal);
+
+      // Función para mover los textos aleatoriamente
+      setInterval(() => {
+        const randomTop = Math.random() * 80 + '%';
+        const randomLeft = Math.random() * 80 + '%';
+        smallModal.style.top = randomTop;
+        smallModal.style.left = randomLeft;
+      }, 1000 + Math.random() * 3000); // Cambiar cada 1-4 segundos
+    });
+    let lastX = 0;
+    let lastY = 0;
+    let lastTime = Date.now();
+
+    document.addEventListener('mousemove', (e) => {
+      const now = Date.now();
+      const dx = e.clientX - lastX;
+      const dy = e.clientY - lastY;
+      const dt = now - lastTime;
+
+      const speed = Math.sqrt(dx * dx + dy * dy) / dt;
+
+      const blur = Math.min(8, 1 + speed * 10);
+      const brightness = 1 + speed * 0.5;
+      const saturate = 1 + speed * 1;
+
+      const bg = document.getElementById('background');
+      bg.style.filter = `blur(${blur}px) brightness(${brightness}) saturate(${saturate})`;
+
+      lastX = e.clientX;
+      lastY = e.clientY;
+      lastTime = now;
+    });
+  </script>
+</body>
+</html>
