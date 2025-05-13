@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Página Principal - Info</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: rgb(255, 255, 255);
+      color: #000;
+      font-family: "Avenir", sans-serif;
+    }
+
+    .header {
+      position: relative;
+      height: 80px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid #ddd;
+      z-index: 10;
+    }
+
+    .nav-buttons a {
+      margin: 0 10px;
+      padding: 10px 20px;
+      text-decoration: none;
+      color: #000;
+      border-radius: 5px;
+      transition: background 0.3s;
+      align-self: center;
+    }
+    .nav-buttons a.active,
+    .nav-buttons a:hover {
+      text-decoration: line-through;
+    }
+
+    .floating-button {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: transparent;
+      color: #000;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 100;
+    }
+
+    .text-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.775);
+      color: #fff;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 1em;
+      z-index: 200;
+      white-space: pre-wrap;
+    }
+    .text-modal.active {
+      display: flex;
+    }
+
+    .big-container {
+      padding: 50px;
+    }
+    .big-container .modal-title-main {
+      font-size: 2em;
+      margin-bottom: 1px;
+      left: 300px;
+      font-weight: bold;
+    }
+    .logo {
+     position: relative;
+     left: 420px;
+     top: 2px;             /* Ajusta tamaño a tu gusto */
+    }
+    .social-logos {
+    display: flex;            /* Coloca los elementos en línea */
+    gap: 10px;                /* Separación entre iconos */
+    align-items: center;      /* Centra verticalmente si hay diferentes alturas */
+   }
+   .social-logos2 {
+    position: relative;
+    right: 360px;
+    display: flex;            /* Coloca los elementos en línea */
+    gap: 10px;                /* Separación entre iconos */
+    align-items: center;      /* Centra verticalmente si hay diferentes alturas */
+   }
+   .modal-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .photo {
+      position: relative;
+      display: flex;
+      width: 500px;
+      height: 500px;
+      left: 100px;
+    }
+    .title-text{
+      position: relative;
+      font-size: 1.4em;
+      font-weight: bold;
+      right: -20px;
+    }
+    .contact-container{
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        top: 150px;
+        left: 150px;
+        gap: 20px;
+    }
+    .description {
+      font-size: 0.95em;
+      line-height: 1.4;
+      color: #918e8e;
+    }
+   /* Mobile Menu Styles */
+    .menu-toggle {
+      display: none;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+ 
+
+    .bar {
+      display: block;
+      width: 1.5rem;
+      height: 0.2rem;
+      background-color: #000;
+      margin: 0.3rem auto;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+/* Estilos base del nav */
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/* Móvil: muestra toggle y oculta nav */
+ /* Media Query for Mobile Devices */
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column; /* Stack header elements */
+        align-items: flex-start; /* Align to the start */
+        height: auto; /* Adjust height for stacked content */
+      }
+ 
+
+      .logo {
+        margin-bottom: 1rem; /* Add some space below the logo */
+      }
+ 
+
+      .nav-buttons {
+        display: none; /* Hide the navigation buttons by default */
+        flex-direction: column; /* Stack navigation links */
+        width: 100%; /* Full width for mobile */
+      }
+ 
+
+      .nav-buttons.active {
+        display: flex; /* Show the navigation buttons when active */
+      }
+ 
+
+      .nav-buttons a {
+        margin: 0.5rem 0; /* Adjust spacing for stacked links */
+        padding: 0.75rem; /* Adjust padding for mobile */
+        border-bottom: 1px solid #ddd; /* Add a separator between links */
+      }
+ 
+
+      .menu-toggle {
+        display: block; /* Show the menu toggle on mobile */
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+      }
+ 
+
+      .modals-row {
+        grid-template-columns: 1fr; /* Stack modals on mobile */
+      }
+ 
+
+      .large-modal {
+        max-width: 100%; /* Full width on mobile */
+      }
+       .social-logos {
+        display: flex;   
+        left: 20px;         /* Coloca los elementos en línea */
+        gap: 10px;                /* Separación entre iconos */
+        align-items: center;      /* Centra verticalmente si hay diferentes alturas */
+   }
+   .photo {
+      position: relative;
+      display: flex;
+      width: 300px;
+      height: 300px;
+      left: 5px;
+    }
+    .big-container{
+      display: flex;
+      flex-direction: column;
+      left: 5px;
+    }
+    .contact-container{
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        top: 50px;
+        left: 40px;
+        gap: 20px;
+    }
+    .text-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.775);
+      color: #fff;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 0.4em;
+      z-index: 200;
+      white-space: pre-wrap;
+    }
+    }
+
+  </style>
+</head>
+<body>
+  <header class="header">
+    <!-- Botón hamburguesa -->
+   <div class="menu-toggle" onclick="toggleMenu()">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+   </div>
+    <nav class="nav-buttons">
+      <a href="/">home</a>
+      <a href="/work/" >\work</a>
+      <a href="/contact/"class="active">\contact</a>
+      <a href="/media/">\media</a>
+    </nav>
+
+    <div class="social-logos">
+      <a href="https://www.linkedin.com/in/agustin-echeverria/" target="_blank" rel="noopener noreferrer">
+        <img src="/work/linkedin-logo-linkedin-logo-transparent-linkedin-icon-transparent-free-free-png.webp" alt="linkedin" class="logo" style="width: 35px;">
+      </a>
+    
+      <a href="https://www.instagram.com/agxchitx/" target="_blank" rel="noopener noreferrer">
+        <img src="/work/87390.png" alt="insta" class="logo" style="height: 26px; width: 26px;">
+      </a>
+    </div>    
+  </header>
+
+  <div class="floating-button" onclick="toggleTextModal()">((-bio-))</div>
+
+  <div class="text-modal" id="textModal" onclick="closeTextModal(event)">
+    <p>
+      Agustín Echeverría is a music producer, audio technician, and composer.
+      Studied Music and Sound Production at the Universidad San Francisco de
+      Quito in collaboration with Berklee (2021) in Quito, Ecuador. During this time,
+      discovered the interest in music technology and synthesizers, a field that has
+      driven to deepen knowledge. This passion culminated in completing a
+      Master's in Composition with Technologies at ESMUC in Barcelona, Spain 
+     (2024).
+      
+      He participated in the production of various independent events and concerts,
+      as well as in live sound companies, working as a sound technician and stage 
+      assistant in Ecuador and Spain. Additionally, he have experience as a music and
+      fencing instructor.
+      
+      Moreover, he had the opportunity to collaborate on diverse musical projects
+      and independent films, working alongside renowned artists and studios as a 
+      composer, musician, recording engineer, mixing engineer, sound designer, 
+      music producer, and recording assistant in Ecuador, Spain, and the Netherlands. 
+      Among these projects, the work as an artist under the name "elconx" stands out,
+      with two albums, three EPs, and a third album currently in pre-production. 
+      Agustin's music has been featured in various digital media outlets and 
+      performed live in multiple concerts.
+      
+      As a composer, he have created soundtracks for independent short films that 
+      have been recognized at international festivals. Additionally, he was part of the
+      team at Sol de Sants Studios in Barcelona, where  contributed to productions 
+      for independent and prominent artists such as Shai Maestro, Silvia Pérez Cruz, 
+      Stuart Zender, Alosa, Michael League, Antonio Sánchez, and others.
+    </p>
+  </div>
+
+  <main class="big-container" style="display: flex; ">
+    <div> 
+     <img src="/work/agx 1.jpg" id="photo" class="photo"></div>
+     <div id="contact-container" class="contact-container">
+     <div id="title-text" class="title-text">Agustin Echeverria</div>
+     <div id="description" class="description">+34 636542538 | +593 979270062</div>
+     <div id="description" class="description">agustinecheverriasonido@gmail.com</div>
+     <div class="social-logos2">
+        <a href="https://www.linkedin.com/in/agustin-echeverria/" target="_blank" rel="noopener noreferrer">
+          <img src="/work/linkedin-logo-linkedin-logo-transparent-linkedin-icon-transparent-free-free-png.webp" alt="linkedin" class="logo" style="width: 35px; color: #918e8e;">
+        </a>
+      
+        <a href="https://www.instagram.com/agxchitx/" target="_blank" rel="noopener noreferrer">
+          <img src="/work/87390.png" alt="insta" class="logo" style="height: 26px; width: 26px; color: #918e8e;">
+        </a>
+
+        <a href="https://drive.google.com/file/d/1iexsnluGSQL7gSL0AXjlw3p6QJyu3Ph1/view?usp=share_link" target="_blank" rel="noopener noreferrer">
+            <img src="521136d25b37386f49728b93d2e4e6fa.png" alt="insta" class="logo" style="height: 32px; width: 32px; top: -1px; color: #918e8e;">
+          </a>
+      </div> 
+    </div>
+   
+  </main>
+
+  <script>
+    function toggleTextModal() {
+      document.getElementById('textModal').classList.toggle('active');
+    }
+    function closeTextModal(e) {
+      if (e.target === e.currentTarget) {
+        e.currentTarget.classList.remove('active');
+      }
+    }
+    // Opcional: cerrar al hacer clic fuera
+  document.addEventListener('click', e => {
+    if (!nav.contains(e.target) && !toggle.contains(e.target)) {
+      nav.classList.remove('open');
+    }
+  });
+
+    function toggleMenu() {
+      const navButtons = document.querySelector('.nav-buttons');
+      navButtons.classList.toggle('active');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agustin Echeverria</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background-color: #fff; }
+
+    #glitchCanvas { display: block; width: 100vw; height: 100vh; }
+
+    .nav-buttons {
+      position: absolute; top: 200px; left: 50%; transform: translateX(-50%);
+      font-family: Avenir, sans-serif; font-size: 20px;
+      display: flex; gap: 10px;
+      z-index: 10;
+    }
+    .nav-buttons a {
+      text-decoration: none; color: #710000;
+      padding: 8px 16px; border-radius: 5px;
+      transition: color 0.3s;
+    }
+    .nav-buttons a:hover,
+    .nav-buttons a.active { text-decoration: line-through; }
+
+    .center-logo {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 80vw; max-width: 800px;
+      height: auto; aspect-ratio: 10/3;
+      background: url('./CAEA.png') no-repeat center/contain;
+      cursor: pointer;
+      z-index: 20;
+    }
+
+    .text-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.775);
+      color: #fff;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 1em;
+      z-index: 200;
+      white-space: pre-wrap;
+    }
+
+    .text-modal.active {
+      display: flex;
+    }
+    #panel, #panel2 {
+      position: absolute;
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+      pointer-events: none;
+      background: rgba(255, 255, 255, 0.677);
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    #panel { width: 100%; height: 100%; }
+    #panel2 { width: 60%; height: 50%; }
+    .close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 210;
+}
+.close-button:hover {
+  color: #ff8080;
+}
+
+
+    @media (max-width: 768px) {
+      .nav-buttons {
+        font-size: 16px;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .center-logo {
+        width: 90vw; max-width: none;
+        top: 150px;
+      }
+      .text-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.775);
+      color: #fff;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 0.1em;
+      z-index: 100;
+    }
+    }
+
+    @media (max-width: 480px) {
+      .nav-buttons { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="glitchCanvas"></canvas>
+
+  <nav class="nav-buttons">
+    <a href="index.html" class="active">\home</a>
+    <a href="/work/">/work</a>
+    <a href="/contact/">\contact</a>
+    <a href="/media/">\media</a>
+  </nav>
+
+  <div class="center-logo" id="centerLogo"></div>
+
+  <div class="text-modal" id="textModal">
+  <button class="close-button" id="closeModalBtn">✕</button>
+    <p id="modalText">
+      Agustín Echeverría is a music producer, audio technician, and composer.
+      Studied Music and Sound Production at the Universidad San Francisco de
+      Quito in collaboration with Berklee (2021) in Quito, Ecuador. During this time,
+      discovered the interest in music technology and synthesizers, a field that has
+      driven to deepen knowledge. This passion culminated in completing a
+      Master's in Composition with Technologies at ESMUC in Barcelona, Spain 
+      (2024).
+      
+      He participated in the production of various independent events and concerts,
+      as well as in live sound companies, working as a sound technician and stage 
+      assistant in Ecuador and Spain. Additionally, he have experience as a music and
+      fencing instructor.
+      
+      Moreover, he had the opportunity to collaborate on diverse musical projects
+      and independent films, working alongside renowned artists and studios as a 
+      composer, musician, recording engineer, mixing engineer, sound designer, 
+      music producer, and recording assistant in Ecuador, Spain, and the Netherlands. 
+      Among these projects, the work as an artist under the name "elconx" stands out,
+      with two albums, three EPs, and a third album currently in pre-production. 
+      Agustin's music has been featured in various digital media outlets and 
+      performed live in multiple concerts.
+      
+      As a composer, he have created soundtracks for independent short films that 
+      have been recognized at international festivals. Additionally, he was part of the
+      team at Sol de Sants Studios in Barcelona, where  contributed to productions 
+      for independent and prominent artists such as Shai Maestro, Silvia Pérez Cruz, 
+      Stuart Zender, Alosa, Michael League, Antonio Sánchez, and others.
+    </p>
+    
+  </div>
+  <div class="panel" id="panel"></div>
+
+  <script>
+    const canvas = document.getElementById('glitchCanvas');
+    const ctx = canvas.getContext('2d');
+    const centerLogo = document.getElementById('centerLogo');
+    const textModal = document.getElementById('textModal');
+
+    if (!ctx) {
+      alert("Error: Canvas no soportado.");
+      throw new Error("No se pudo obtener contexto 2D.");
+    }
+
+    let w, h, dpr = window.devicePixelRatio || 1;
+    let mouseSpeed = 0, lastX = 0, lastY = 0, active = false;
+
+    function resizeCanvas() {
+      dpr = window.devicePixelRatio || 1;
+      w = canvas.width = window.innerWidth * dpr;
+      h = canvas.height = window.innerHeight * dpr;
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+    }
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    window.addEventListener('mousemove', e => {
+      const dx = e.clientX - lastX;
+      const dy = e.clientY - lastY;
+      mouseSpeed = Math.hypot(dx, dy);
+      lastX = e.clientX;
+      lastY = e.clientY;
+      active = true;
+    });
+
+    window.addEventListener('touchmove', e => {
+      const touch = e.touches[0];
+      const dx = touch.clientX - lastX;
+      const dy = touch.clientY - lastY;
+      mouseSpeed = Math.hypot(dx, dy);
+      lastX = touch.clientX;
+      lastY = touch.clientY;
+      active = true;
+      e.preventDefault();
+    }, { passive: false });
+
+    function randomTurquoise() {
+      return `hsl(${Math.random() * 40}, ${10 + Math.random() * 20}%, ${20 + Math.random() * 30}%)`;
+    }
+
+    function drawGlitch(intensity) {
+      const count = Math.floor(800 * intensity);
+      for (let i = 0; i < count; i++) {
+        const x = Math.random() * w / dpr;
+        const y = Math.random() * h / dpr;
+        ctx.strokeStyle = randomTurquoise();
+        ctx.lineWidth = 0.5 + Math.random() * 2;
+        ctx.beginPath();
+        const len = 10 + Math.random() * 50;
+        const angle = Math.random() * 2 * Math.PI;
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(angle) * len, y + Math.sin(angle) * len);
+        ctx.stroke();
+      }
+    }
+
+    function glitchBands(intensity) {
+      const lines = Math.floor(10 * intensity);
+      for (let i = 0; i < lines; i++) {
+        const y = Math.random() * h / dpr;
+        const bh = 5 + Math.random() * 10;
+        try {
+          const data = ctx.getImageData(0, y, w / dpr, bh);
+          ctx.putImageData(data, (Math.random() - 0.5) * 20, y);
+        } catch (e) {
+          // En algunos casos puede fallar por seguridad (CORS)
+          continue;
+        }
+      }
+    }
+
+    function loop() {
+      requestAnimationFrame(loop);
+      if (!active) return;
+      const factor = Math.min(1, mouseSpeed / 30 + 0.1);
+      ctx.fillStyle = 'rgba(255,255,255,0.1)';
+      ctx.fillRect(0, 0, w / dpr, h / dpr);
+      drawGlitch(factor);
+      glitchBands(factor);
+      mouseSpeed = 0;
+      if (mouseSpeed < 0.2) active = false;
+    }
+
+    function toggleTextModal() {
+      textModal.classList.toggle('active');
+    }
+
+    centerLogo.addEventListener('click', toggleTextModal);
+    textModal.addEventListener('click', (e) => {
+      if (e.target === textModal) {
+        textModal.classList.remove('active');
+      }
+    });
+
+    loop();
+    document.getElementById('closeModalBtn').addEventListener('click', () => {
+  textModal.classList.remove('active');
+});
+
+  </script>
+</body>
+</html>
