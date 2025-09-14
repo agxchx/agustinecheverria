@@ -1,36 +1,52 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Agustin Echeverria</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Página Principal - Info</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; overflow: hidden; background-color: #fff; }
+    body {
+      margin: 0;
+      background-color: rgb(253, 250, 246);
+      color: #000;
+      font-family: "Avenir", sans-serif;
+    }
 
-    #glitchCanvas { display: block; width: 100vw; height: 100vh; }
-
-    .nav-buttons {
-      position: absolute; top: 200px; left: 50%; transform: translateX(-50%);
-      font-family: Avenir, sans-serif; font-size: 20px;
-      display: flex; gap: 10px;
+    .header {
+      position: relative;
+      height: 80px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid #ddd;
       z-index: 10;
     }
-    .nav-buttons a {
-      text-decoration: none; color: #710000;
-      padding: 8px 16px; border-radius: 5px;
-      transition: color 0.3s;
-    }
-    .nav-buttons a:hover,
-    .nav-buttons a.active { text-decoration: line-through; }
 
-    .center-logo {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 80vw; max-width: 800px;
-      height: auto; aspect-ratio: 10/3;
-      background: url('./CAEA.png') no-repeat center/contain;
+    .nav-buttons a {
+      margin: 0 10px;
+      padding: 10px 20px;
+      text-decoration: none;
+      color: #000;
+      border-radius: 5px;
+      transition: background 0.3s;
+      align-self: center;
+    }
+    .nav-buttons a.active,
+    .nav-buttons a:hover {
+      text-decoration: line-through;
+    }
+
+    .floating-button {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: transparent;
+      color: #000;
+      padding: 10px;
+      border-radius: 50%;
       cursor: pointer;
-      z-index: 20;
+      z-index: 100;
     }
 
     .text-modal {
@@ -46,47 +62,209 @@
       z-index: 200;
       white-space: pre-wrap;
     }
-
     .text-modal.active {
       display: flex;
     }
-    #panel, #panel2 {
-      position: absolute;
-      top: 50%; left: 50%; transform: translate(-50%, -50%);
-      pointer-events: none;
-      background: rgba(255, 255, 255, 0.677);
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+
+    .big-container {
+      padding: 50px;
     }
-    #panel { width: 100%; height: 100%; }
-    #panel2 { width: 60%; height: 50%; }
-    .close-button {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-  z-index: 210;
+    .big-container .modal-title-main {
+      font-size: 2em;
+      margin-bottom: 1px;
+      left: 300px;
+      font-weight: bold;
+    }
+
+    .modals-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .large-modal {
+      position: relative;
+      background: #fff;
+      color: #646363;
+      display: grid;
+      grid-template-areas:
+        "title title"
+        "subtitle subtitle"
+        "description description"
+        "media media"
+        "small small";
+      grid-template-rows: auto auto minmax(0,1fr) auto auto;
+      gap: 10px;
+      padding: 20px;
+      border-radius: 0px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      max-width: 400px;
+      height: 450px;
+    }
+
+    .large-modal .modal-title {
+  
+      grid-area: title;
+      font-size: 1.4em;
+      font-weight: bold;
+    }
+
+    .large-modal .modal-subtitle {
+
+      grid-area: subtitle;
+      font-size: 1em;
+      font-weight: 600;
+    }
+
+    .large-modal .description {
+      grid-area: description;
+      font-size: 0.95em;
+      line-height: 1.4;
+    }
+
+    .large-modal .media {
+
+      grid-area: media;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .large-modal .media img,
+    .large-modal .media iframe {
+      max-width: 100%;
+      max-height: 200px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    .large-modal .small-modals {
+      grid-area: small;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
-.close-button:hover {
-  color: #ff8080;
-}
+    .large-modal .small-modal {
+      display: inline-flex;   
+      text-decoration: none;
+      color: inherit;  /* inline para mantenerse en la misma celda */
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      background: rgba(0,0,0,0.05);
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 0.9em;
+      transition: background-color .3s, box-shadow .3s;
+     }
+    .large-modal .small-modal:hover {
+      background-color: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .small-modal a {
+      color: inherit;
+      text-decoration: none;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    
+   .modal-link {
+      text-decoration: none;
+      color: inherit;
+      display: contents;
 
 
+    }
+    .large-modal:hover {
+      background-color: #000000;
+      box-shadow: 0 6px 12px rgb(0, 0, 0);
+    }
+    
+    .logo {
+     position: relative;
+     left: 420px;
+     top: 2px;             /* Ajusta tamaño a tu gusto */
+    }
+    .social-logos {
+    display: flex;            /* Coloca los elementos en línea */
+    gap: 10px;                /* Separación entre iconos */
+    align-items: center;      /* Centra verticalmente si hay diferentes alturas */
+   }
+/* Mobile Menu Styles */
+    .menu-toggle {
+      display: none;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+ 
+
+    .bar {
+      display: block;
+      width: 1.5rem;
+      height: 0.2rem;
+      background-color: #000;
+      margin: 0.3rem auto;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+ 
+
+    /* Media Query for Mobile Devices */
     @media (max-width: 768px) {
+      .header {
+        flex-direction: column; /* Stack header elements */
+        align-items: flex-start; /* Align to the start */
+        height: auto; /* Adjust height for stacked content */
+      }
+ 
+
+      .logo {
+        margin-bottom: 1rem; /* Add some space below the logo */
+      }
+ 
+
       .nav-buttons {
-        font-size: 16px;
-        flex-direction: column;
-        gap: 6px;
+        display: none; /* Hide the navigation buttons by default */
+        flex-direction: column; /* Stack navigation links */
+        width: 100%; /* Full width for mobile */
       }
-      .center-logo {
-        width: 90vw; max-width: none;
-        top: 150px;
+ 
+
+      .nav-buttons.active {
+        display: flex; /* Show the navigation buttons when active */
       }
-      .text-modal {
+ 
+
+      .nav-buttons a {
+        margin: 0.5rem 0; /* Adjust spacing for stacked links */
+        padding: 0.75rem; /* Adjust padding for mobile */
+        border-bottom: 1px solid #ddd; /* Add a separator between links */
+      }
+ 
+
+      .menu-toggle {
+        display: block; /* Show the menu toggle on mobile */
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+      }
+ 
+
+      .modals-row {
+        grid-template-columns: 1fr; /* Stack modals on mobile */
+      }
+ 
+
+      .large-modal {
+        max-width: 100%; /* Full width on mobile */
+      }
+       .social-logos {
+        display: flex;   
+        left: 20px;         /* Coloca los elementos en línea */
+        gap: 10px;                /* Separación entre iconos */
+        align-items: center;      /* Centra verticalmente si hay diferentes alturas */
+   }
+   .text-modal {
       display: none;
       position: fixed;
       inset: 0;
@@ -95,38 +273,52 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      font-size: 0.1em;
-      z-index: 100;
+      font-size: 0.4em;
+      z-index: 200;
+      white-space: pre-wrap;
     }
     }
 
-    @media (max-width: 480px) {
-      .nav-buttons { font-size: 14px; }
-    }
   </style>
 </head>
 <body>
-  <canvas id="glitchCanvas"></canvas>
+  <header class="header">
+      <!-- Botón hamburguesa -->
+   <div class="menu-toggle" onclick="toggleMenu()">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+   </div>
+    <nav class="nav-buttons">
+      <a href="/">/home</a>
+      <a href="/work/" class="active">\work</a>
+      <a href="/contact/">\contact</a>
+      <a href="/media/">\media</a>
+    </nav>
 
-  <nav class="nav-buttons">
-    <a href="index.html" class="active">\home</a>
-    <a href="/work/">/work</a>
-    <a href="/contact/">\contact</a>
-    <a href="/media/">\media</a>
-  </nav>
 
-  <div class="center-logo" id="centerLogo"></div>
+    <div class="social-logos">
+      <a href="https://www.linkedin.com/in/agustin-echeverria/" target="_blank" rel="noopener noreferrer">
+        <img src="linkedin-logo-linkedin-logo-transparent-linkedin-icon-transparent-free-free-png.webp" alt="linkedin" class="logo" style="width: 35px;">
+      </a>
+    
+      <a href="https://www.instagram.com/agxchitx/" target="_blank" rel="noopener noreferrer">
+        <img src="87390.png" alt="insta" class="logo" style="height: 26px; width: 26px;">
+      </a>
+    </div>    
+  </header>
 
-  <div class="text-modal" id="textModal">
-  <button class="close-button" id="closeModalBtn">✕</button>
-    <p id="modalText">
+  <div class="floating-button" onclick="toggleTextModal()">((-bio-))</div>
+
+  <div class="text-modal" id="textModal" onclick="closeTextModal(event)">
+     <p id="modalText">
       Agustín Echeverría is a music producer, audio technician, and composer.
       Studied Music and Sound Production at the Universidad San Francisco de
       Quito in collaboration with Berklee (2021) in Quito, Ecuador. During this time,
       discovered the interest in music technology and synthesizers, a field that has
       driven to deepen knowledge. This passion culminated in completing a
       Master's in Composition with Technologies at ESMUC in Barcelona, Spain 
-      (2024).
+     (2024).
       
       He participated in the production of various independent events and concerts,
       as well as in live sound companies, working as a sound technician and stage 
@@ -148,120 +340,284 @@
       for independent and prominent artists such as Shai Maestro, Silvia Pérez Cruz, 
       Stuart Zender, Alosa, Michael League, Antonio Sánchez, and others.
     </p>
-    
   </div>
-  <div class="panel" id="panel"></div>
+
+  <main class="big-container">
+    <div class="modal-title-main">Audio Engineer</div>
+
+    <div class="modals-row">
+      <a href="/work/sol-de-sants/" class="modal-link">
+        <div class="large-modal">
+          <div class="modal-title">Sol de Sants</div>
+          <div class="modal-subtitle">Assistant</div>
+          <div class="description">Sol de Sants is a recording studio in Barcelona led by Latin Grammy winner Alberto Perez. Agustin featured with indie and renowned artists. Click for more info.</div>
+          <div class="media"><img src="agx.jpg" alt="Sol de Sants Studio"></div>
+          <div class="small-modals">
+            <a href="https://open.spotify.com/playlist/3LrqKKGZnbCStVhmyTa87u?si=3836a11410ca4a7a" target="_blank" class="small-modal">playlist</a>
+          </div>
+          
+        </div>
+      </a>
+      <!-- Repite el bloque .large-modal para cada elemento -->
+      <!-- ... -->
+  
+    <a href="/work/new-amsterdam/" class="modal-link">
+      <div class="large-modal">
+        <div class="modal-title">New Amsterdam Jazz Live Session</div>
+        <div class="modal-subtitle">Assistant Recording Engineer</div>
+        <div class="description">
+          Part of the audio team of the Barcelona Music Sessions production organized by New Amsterdam Jazz at Sol de
+          Sants Studios in Barcelona in November 2024. The series consisted of recording 15 bands, totaling 75 musicians, in
+          8 days. Click for more info.
+        </div>
+        <div class="media">
+          <img src="NAJ_MAIN_LOGO-TEXT_-RGB.png" alt="New Amsterdam Jazz Logo">
+        </div>
+        <div class="small-modals">
+          <a href="https://drive.google.com/file/d/1qk1wVWHPAGAWqHfc2YBefG_YkqqGXmle/view" target="_blank" class="small-modal">certificate</a>
+        </div>
+      </div>
+    </a>
+
+      <div class="large-modal">
+        <div class="modal-title">Kev Diem - Live Session</div>
+        <div class="modal-subtitle">Co-recording Engineer</div>
+        <div class="description">
+          Live Session en Sol de Sants Studios, Barcelona, Spain. Recording Engineer
+        </div>
+        <div class="media">
+          <iframe 
+            width="100%" height="150" 
+            src="https://www.youtube.com/embed/e1U-53PmbpU?si=xw6J6dLe_ARchR_C" 
+            title="YouTube video player" frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            allowfullscreen>
+          </iframe>
+        </div>
+        <div class="small-modals">
+          <a href="https://www.instagram.com/kevdiem/" target="_blank" class="small-modal">Instagram</a>
+        </div>
+      </div>
+
+      <div class="large-modal">
+        <div class="modal-title">Sesiones K-Pick Up </div>
+        <div class="modal-subtitle">Recording | Mixing Engineer</div>
+        <div class="description">Live sessions from a Volkswagen Van produced by Doble Luna Records</div>
+        <div class="media">
+          <iframe width="100%" height="150" src="https://www.youtube.com/embed/VZEjoJULh9M?si=B3v6JnUJ1VZLOW5B" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="small-modals">
+          <a href="https://youtu.be/VZEjoJULh9M" target="_blank" class="small-modal">Ver Video</a>
+        </div>
+      </div>
+    </div><!-- /.modals-row -->
+
+    <div class="modals-row">
+      <div class="large-modal">
+        <div class="modal-title">Juan David Maya - Incio</div>
+        <div class="modal-subtitle">Recording Engineer</div>
+        <div class="description">
+          Inicio is the first studio album by the Ecuadorian musician Juan David Maya. Drum recording engineer at: 
+         Angela,
+         Verdad, 
+         Siete. 
+        </div>
+        <div class="media">
+          <iframe width="100%" height="150" src="https://www.youtube.com/embed/SkumexCRn1w?si=Cx0v3a7rlz2_FqwL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="small-modals">
+          <a href="https://ditto.fm/inicio-juan-david-maya" target="_blank" class="small-modal">Stream</a>
+        </div>
+      </div>
+
+      <div class="large-modal">
+        <div class="modal-title">Bernarda - Otra Mañana</div>
+        <div class="modal-subtitle">Assistant Recording Engineer (SdS)</div>
+        <div class="description">
+          Otras Mañana is a single by the Catalan artist Bernarda. Responsable for drum recording and Protools operator.
+        </div>
+        <div class="media">
+          <iframe width="100%" height="150" src="https://www.youtube.com/embed/5aW1JPUIXok?si=8mKp2k4r2WucUphK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="small-modals">
+          <a href="//open.spotify.com/intl-es/track/1utOOMwayJR65Snrwqvp6b?si=3fdddd4270e64df0" target="_blank" class="small-modal">Stream</a>
+        </div>
+      </div>
+    </div><!-- /.modals-row -->
+
+    <div class="modal-title-main">Film and Audivisual</div>
+
+    <div class="modals-row">
+  
+      <div class="large-modal">
+        <div class="modal-title">Ventanas Abiertas Film</div>
+        <div class="modal-subtitle">Composition</div>
+        <div class="description">
+          Ventanas Abiertas is a short film written and directed by Jos Mauro Witteveen. All the music, diagetic and non-diagetic is composed and mixed by Agustin. The film was officially selected and projected in the student competition of the Netherlands Film Festival 2022.
+        </div>
+        <div class="media">
+          <iframe width="100%" height="150" src="https://www.youtube.com/embed/bi2DSeiCeic?si=DSFC8yADPkxBdy_6" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="small-modals">
+          <a href="https://www.imdb.com/es/title/tt22446014/?ref_=ext_shr_lnk" target="_blank" class="small-modal">IMDB</a>
+        </div>
+      </div>
+
+      <div class="large-modal">
+        <div class="modal-title">La Ruta Film</div>
+        <div class="modal-subtitle">Composition</div>
+        <div class="description">
+          La Ruta is a  film written and directed by Nico Strike. Some of the music, diegetic and non-diagetic is composed and mixed by Agustin.
+        </div>
+        <div class="media">
+          <iframe width="100%" height="150" src="https://www.youtube.com/embed/Il1kYm5hS_o?si=NPe5t5d4a2VfftwQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="small-modals">
+          <a href="https://www.imdb.com/es/title/tt28784852/?ref_=ext_shr_lnk" target="_blank" class="small-modal">IMDB</a>
+        </div>
+      </div>
+
+      <div class="large-modal">
+        <div class="modal-title">De rok van mijn oma </div>
+        <div class="modal-subtitle">Composition | Soundesign</div>
+        <div class="description">
+          Rock van mijin Oma is a short documentary written and directed by Jos Mauro Witteveen. All the music is composed by Agustin. Also the sound design and mixing in stereo and 5.1 was made by Agustin. 
+        </div>
+        <div class="media">
+          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DH5X9wgIGSA/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(150 - 2px);"><div style="padding:16px;"> <a href="https://www.instagram.com/reel/DH5X9wgIGSA/?utm_source=ig_embed&amp;utm_campaign=loading" style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank"> <div style=" display: flex; flex-direction: row; align-items: center;"> <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div> <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;"> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div></div></div><div style="padding: 19% 0;"></div> <div style="display:block; height:50px; margin:0 auto 12px; width:50px;"><svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-511.000000, -20.000000)" fill="#000000"><g><path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path></g></g></g></svg></div><div style="padding-top: 8px;"> <div style=" color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">Ver esta publicación en Instagram</div></div><div style="padding: 12.5% 0;"></div> <div style="display: flex; flex-direction: row; margin-bottom: 14px; align-items: center;"><div> <div style="background-color: #F4F4F4; border-radius: 50%; height: 12.5px; width: 12.5px; transform: translateX(0px) translateY(7px);"></div> <div style="background-color: #F4F4F4; height: 12.5px; transform: rotate(-45deg) translateX(3px) translateY(1px); width: 12.5px; flex-grow: 0; margin-right: 14px; margin-left: 2px;"></div> <div style="background-color: #F4F4F4; border-radius: 50%; height: 12.5px; width: 12.5px; transform: translateX(9px) translateY(-18px);"></div></div><div style="margin-left: 8px;"> <div style=" background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 20px; width: 20px;"></div> <div style=" width: 0; height: 0; border-top: 2px solid transparent; border-left: 6px solid #f4f4f4; border-bottom: 2px solid transparent; transform: translateX(16px) translateY(-4px) rotate(30deg)"></div></div><div style="margin-left: auto;"> <div style=" width: 0px; border-top: 8px solid #F4F4F4; border-right: 8px solid transparent; transform: translateY(16px);"></div> <div style=" background-color: #F4F4F4; flex-grow: 0; height: 12px; width: 16px; transform: translateY(-4px);"></div> <div style=" width: 0; height: 0; border-top: 8px solid #F4F4F4; border-left: 8px solid transparent; transform: translateY(-4px) translateX(8px);"></div></div></div> <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center; margin-bottom: 24px;"> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 224px;"></div> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 144px;"></div></div></a><p style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; line-height:17px; margin-bottom:0; margin-top:8px; overflow:hidden; padding:8px 0 7px; text-align:center; text-overflow:ellipsis; white-space:nowrap;"><a href="https://www.instagram.com/reel/DH5X9wgIGSA/?utm_source=ig_embed&amp;utm_campaign=loading" style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px; text-decoration:none;" target="_blank">Una publicación compartida por Jos Mauro (@josmaurow)</a></p></div></blockquote>
+          <script async src="//www.instagram.com/embed.js"></script>
+        </div>
+        <div class="small-modals">
+          <a href="https://www.themoviedb.org/movie/1458111-de-rok-van-mijn-oma" target="_blank" class="small-modal">TMDB</a>
+        </div>
+      </div>
+
+      <div class="large-modal">
+        <div class="modal-title">Vita | Advertising Spot</div>
+        <div class="modal-subtitle">Music Production/ Audio Engineer</div>
+        <div class="description">
+          An advertising spot for the milk brand Vita.  Composition and arrragment by Jordy Núñez. Production, secuence and mix Agustin Echeverria
+        </div>
+        <div class="media">
+          <iframe width="100%" height="150" src="https://www.youtube.com/embed/GHialgZjfRw?si=dfsND_wIqbkQ5JcN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="small-modals">
+          <div class="small-modal">Más Info</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modals-row">
+      <div class="large-modal">
+        <div class="modal-title">Into the Abyss Film</div>
+        <div class="modal-subtitle">Composition</div>
+        <div class="description">
+          Into the Abyss  is a  short film written and directed by Jacobo Sanmartin. All the musc made by Agustin.
+        </div>
+        <div class="media">
+          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/CtzfQHFpJrE/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);"><div style="padding:16px;"> <a href="https://www.instagram.com/reel/CtzfQHFpJrE/?utm_source=ig_embed&amp;utm_campaign=loading" style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank"> <div style=" display: flex; flex-direction: row; align-items: center;"> <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div> <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;"> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div></div></div><div style="padding: 19% 0;"></div> <div style="display:block; height:50px; margin:0 auto 12px; width:50px;"><svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-511.000000, -20.000000)" fill="#000000"><g><path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path></g></g></g></svg></div><div style="padding-top: 8px;"> <div style=" color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">Ver esta publicación en Instagram</div></div><div style="padding: 12.5% 0;"></div> <div style="display: flex; flex-direction: row; margin-bottom: 14px; align-items: center;"><div> <div style="background-color: #F4F4F4; border-radius: 50%; height: 12.5px; width: 12.5px; transform: translateX(0px) translateY(7px);"></div> <div style="background-color: #F4F4F4; height: 12.5px; transform: rotate(-45deg) translateX(3px) translateY(1px); width: 12.5px; flex-grow: 0; margin-right: 14px; margin-left: 2px;"></div> <div style="background-color: #F4F4F4; border-radius: 50%; height: 12.5px; width: 12.5px; transform: translateX(9px) translateY(-18px);"></div></div><div style="margin-left: 8px;"> <div style=" background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 20px; width: 20px;"></div> <div style=" width: 0; height: 0; border-top: 2px solid transparent; border-left: 6px solid #f4f4f4; border-bottom: 2px solid transparent; transform: translateX(16px) translateY(-4px) rotate(30deg)"></div></div><div style="margin-left: auto;"> <div style=" width: 0px; border-top: 8px solid #F4F4F4; border-right: 8px solid transparent; transform: translateY(16px);"></div> <div style=" background-color: #F4F4F4; flex-grow: 0; height: 12px; width: 16px; transform: translateY(-4px);"></div> <div style=" width: 0; height: 0; border-top: 8px solid #F4F4F4; border-left: 8px solid transparent; transform: translateY(-4px) translateX(8px);"></div></div></div> <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center; margin-bottom: 24px;"> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 224px;"></div> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 144px;"></div></div></a><p style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; line-height:17px; margin-bottom:0; margin-top:8px; overflow:hidden; padding:8px 0 7px; text-align:center; text-overflow:ellipsis; white-space:nowrap;"><a href="https://www.instagram.com/reel/CtzfQHFpJrE/?utm_source=ig_embed&amp;utm_campaign=loading" style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px; text-decoration:none;" target="_blank">Una publicación compartida por @into_the_abyss_shortfilm</a></p></div></blockquote>
+          <script async src="//www.instagram.com/embed.js"></script>
+        </div>
+        <div class="small-modals">
+          <div class="small-modal">Más Info</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-title-main">Music Production and Composition</div>
+
+    <div class="modals-row">
+      <div class="large-modal">
+        <div class="modal-title">elconx</div>
+        <div class="modal-subtitle">Music Production | Main artist</div>
+        <div class="description">
+          Is an ambient electronic music project, combined with indie, rock and jazz. "Suspiro" the newest release. Composition, mixing and principal artist. For furder information you can see the EPK here.
+        </div>
+        <div class="media">
+          <img src="agx 1.jpg" alt="Sol de Sants Studio">
+        </div>
+        <div class="small-modals">
+          <a href="https://elconx.jimdosite.com" target="_blank" class="small-modal">EPK</a>
+        </div>
+      </div>
+
+      <div class="large-modal">
+        <div class="modal-title">Suspira</div>
+        <div class="modal-subtitle">Composition</div>
+        <div class="description">
+          Composition for Cello and Electronic. Based in live manipulation of sound and programed with MAX/MSP
+        </div>
+        <div class="media">
+          <iframe width="100%" height="150" src="https://www.youtube.com/embed/pUcwCLadihA?si=wxMMeItZuomIYV-x" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="small-modals">
+          <div class="small-modal">Más Info</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-title-main">Mixed Media</div>
+
+    <div class="modals-row">
+      <div class="large-modal">
+        <div class="modal-title">Suspira (Mañana)</div>
+        <div class="modal-subtitle">Interactive Audio and video, MAX/MSP</div> 
+        <div class="description">
+          Suspira (Mañana) is a interactive audio and video instalation based in the archive and sound manipulation of Suspira (composititon). It was first presented in Museu de la Música in Barcelona. 
+        </div>
+        <div class="media">
+          <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/DOj9PEqDfvh/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);"><div style="padding:16px;"> <a href="https://www.instagram.com/p/DOj9PEqDfvh/?utm_source=ig_embed&amp;utm_campaign=loading" style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank"> <div style=" display: flex; flex-direction: row; align-items: center;"> <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div> <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;"> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div></div></div><div style="padding: 19% 0;"></div> <div style="display:block; height:50px; margin:0 auto 12px; width:50px;"><svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-511.000000, -20.000000)" fill="#000000"><g><path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path></g></g></g></svg></div><div style="padding-top: 8px;"> <div style=" color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">Ver esta publicación en Instagram</div></div><div style="padding: 12.5% 0;"></div> <div style="display: flex; flex-direction: row; margin-bottom: 14px; align-items: center;"><div> <div style="background-color: #F4F4F4; border-radius: 50%; height: 12.5px; width: 12.5px; transform: translateX(0px) translateY(7px);"></div> <div style="background-color: #F4F4F4; height: 12.5px; transform: rotate(-45deg) translateX(3px) translateY(1px); width: 12.5px; flex-grow: 0; margin-right: 14px; margin-left: 2px;"></div> <div style="background-color: #F4F4F4; border-radius: 50%; height: 12.5px; width: 12.5px; transform: translateX(9px) translateY(-18px);"></div></div><div style="margin-left: 8px;"> <div style=" background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 20px; width: 20px;"></div> <div style=" width: 0; height: 0; border-top: 2px solid transparent; border-left: 6px solid #f4f4f4; border-bottom: 2px solid transparent; transform: translateX(16px) translateY(-4px) rotate(30deg)"></div></div><div style="margin-left: auto;"> <div style=" width: 0px; border-top: 8px solid #F4F4F4; border-right: 8px solid transparent; transform: translateY(16px);"></div> <div style=" background-color: #F4F4F4; flex-grow: 0; height: 12px; width: 16px; transform: translateY(-4px);"></div> <div style=" width: 0; height: 0; border-top: 8px solid #F4F4F4; border-left: 8px solid transparent; transform: translateY(-4px) translateX(8px);"></div></div></div> <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center; margin-bottom: 24px;"> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 224px;"></div> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 144px;"></div></div></a><p style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; line-height:17px; margin-bottom:0; margin-top:8px; overflow:hidden; padding:8px 0 7px; text-align:center; text-overflow:ellipsis; white-space:nowrap;"><a href="https://www.instagram.com/p/DOj9PEqDfvh/?utm_source=ig_embed&amp;utm_campaign=loading" style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px; text-decoration:none;" target="_blank">Una publicación compartida por Æ 🤺🎞🎛 (@diariodeagucho)</a></p></div></blockquote>
+<script async src="//www.instagram.com/embed.js"></script>
+        </div>
+        <div class="small-modals">
+          <div class="small-modal">Más Info</div>
+        </div>
+      </div>
+
+      <div class="large-modal">
+        <div class="modal-title">Suspira Synth</div>
+        <div class="modal-subtitle">Coding</div>
+        <div class="description">
+          With the spirit of democratizing Suspira, the technology and the composition itself, an online version of the MAX/MSP live sound manipulation device and animation used in Suspira and Suspira (Mañana) was created. This synthesizer is in its first demo phase and will be published for demo users in October 2025.  
+        </div>
+        <div class="media">
+          <iframe width="100%" height="150" src="https://www.youtube.com/embed/o3fnaMkH3Ro?si=CqXS092YuRWKzusz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="small-modals">
+          <a href="https://agxchx.github.io/SuspiraSynth/" target="_blank" class="small-modal">DEMO</a>
+        </div>
+      </div>
+    </div>
+  </main>
 
   <script>
-    const canvas = document.getElementById('glitchCanvas');
-    const ctx = canvas.getContext('2d');
-    const centerLogo = document.getElementById('centerLogo');
-    const textModal = document.getElementById('textModal');
-
-    if (!ctx) {
-      alert("Error: Canvas no soportado.");
-      throw new Error("No se pudo obtener contexto 2D.");
-    }
-
-    let w, h, dpr = window.devicePixelRatio || 1;
-    let mouseSpeed = 0, lastX = 0, lastY = 0, active = false;
-
-    function resizeCanvas() {
-      dpr = window.devicePixelRatio || 1;
-      w = canvas.width = window.innerWidth * dpr;
-      h = canvas.height = window.innerHeight * dpr;
-      canvas.style.width = window.innerWidth + 'px';
-      canvas.style.height = window.innerHeight + 'px';
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(dpr, dpr);
-    }
-
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    window.addEventListener('mousemove', e => {
-      const dx = e.clientX - lastX;
-      const dy = e.clientY - lastY;
-      mouseSpeed = Math.hypot(dx, dy);
-      lastX = e.clientX;
-      lastY = e.clientY;
-      active = true;
-    });
-
-    window.addEventListener('touchmove', e => {
-      const touch = e.touches[0];
-      const dx = touch.clientX - lastX;
-      const dy = touch.clientY - lastY;
-      mouseSpeed = Math.hypot(dx, dy);
-      lastX = touch.clientX;
-      lastY = touch.clientY;
-      active = true;
-      e.preventDefault();
-    }, { passive: false });
-
-    function randomTurquoise() {
-      return `hsl(${Math.random() * 40}, ${10 + Math.random() * 20}%, ${20 + Math.random() * 30}%)`;
-    }
-
-    function drawGlitch(intensity) {
-      const count = Math.floor(800 * intensity);
-      for (let i = 0; i < count; i++) {
-        const x = Math.random() * w / dpr;
-        const y = Math.random() * h / dpr;
-        ctx.strokeStyle = randomTurquoise();
-        ctx.lineWidth = 0.5 + Math.random() * 2;
-        ctx.beginPath();
-        const len = 10 + Math.random() * 50;
-        const angle = Math.random() * 2 * Math.PI;
-        ctx.moveTo(x, y);
-        ctx.lineTo(x + Math.cos(angle) * len, y + Math.sin(angle) * len);
-        ctx.stroke();
-      }
-    }
-
-    function glitchBands(intensity) {
-      const lines = Math.floor(10 * intensity);
-      for (let i = 0; i < lines; i++) {
-        const y = Math.random() * h / dpr;
-        const bh = 5 + Math.random() * 10;
-        try {
-          const data = ctx.getImageData(0, y, w / dpr, bh);
-          ctx.putImageData(data, (Math.random() - 0.5) * 20, y);
-        } catch (e) {
-          // En algunos casos puede fallar por seguridad (CORS)
-          continue;
-        }
-      }
-    }
-
-    function loop() {
-      requestAnimationFrame(loop);
-      if (!active) return;
-      const factor = Math.min(1, mouseSpeed / 30 + 0.1);
-      ctx.fillStyle = 'rgba(255,255,255,0.1)';
-      ctx.fillRect(0, 0, w / dpr, h / dpr);
-      drawGlitch(factor);
-      glitchBands(factor);
-      mouseSpeed = 0;
-      if (mouseSpeed < 0.2) active = false;
-    }
-
     function toggleTextModal() {
-      textModal.classList.toggle('active');
+      document.getElementById('textModal').classList.toggle('active');
     }
-
-    centerLogo.addEventListener('click', toggleTextModal);
-    textModal.addEventListener('click', (e) => {
-      if (e.target === textModal) {
-        textModal.classList.remove('active');
+    function closeTextModal(e) {
+      if (e.target === e.currentTarget) {
+        e.currentTarget.classList.remove('active');
       }
-    });
+    }
+     const toggle = document.querySelector('.menu-toggle');
+  const nav    = document.querySelector('.nav-buttons');
 
-    loop();
-    document.getElementById('closeModalBtn').addEventListener('click', () => {
-  textModal.classList.remove('active');
-});
+  toggle.addEventListener('click', () => {
+    nav.classList.toggle('open');
+  });
 
+  // Opcional: cerrar al hacer clic fuera
+  document.addEventListener('click', e => {
+    if (!nav.contains(e.target) && !toggle.contains(e.target)) {
+      nav.classList.remove('open');
+    }
+  });
+
+    function toggleMenu() {
+      const navButtons = document.querySelector('.nav-buttons');
+      navButtons.classList.toggle('active');
+    }
   </script>
 </body>
 </html>
+
